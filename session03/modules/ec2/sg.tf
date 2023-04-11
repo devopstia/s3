@@ -34,3 +34,12 @@ resource "aws_security_group_rule" "webserver_allow_all_outbound" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = aws_security_group.bastion_sg.id
 }
+
+resource "aws_security_group_rule" "webserver_allow_one_ports" {
+  type              = "ingress"
+  from_port         = 80
+  to_port           = 80
+  protocol          = "-1"
+  cidr_blocks       = ["0.0.0.0/0"]
+  security_group_id = aws_security_group.bastion_sg.id
+}
