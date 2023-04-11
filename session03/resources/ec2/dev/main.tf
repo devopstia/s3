@@ -36,7 +36,7 @@ locals {
     "AssetID"       = "2560"
     "AssetName"     = "Insfrastructure"
     "Teams"         = "DEL"
-    "Environment"   = "dev"
+    "Environment"   = "production"
     "Project"       = "alpha"
     "CreateBy"      = "Terraform"
     "cloudProvider" = "aws"
