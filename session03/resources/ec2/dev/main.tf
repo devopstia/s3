@@ -26,7 +26,7 @@ terraform {
 
 locals {
   aws_region    = "us-east-1"
-  instance_type = "t2.micro"
+  instance_type = "t2.medium"
   key_name      = "terraform"
 
   vpc_id    = "vpc-068852590ea4b093b"
