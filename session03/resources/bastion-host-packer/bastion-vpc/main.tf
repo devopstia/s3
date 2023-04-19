@@ -30,8 +30,8 @@ locals {
   instance_type = "t2.micro"
   key_name      = "terraform"
   ami           = "ami-0428feff696311306"
-  vpc_id        = "vpc-0469fa2cb657017f8"
-  subnet_id     = "subnet-02161e054c0e7df1d"
+  vpc_id        = data.aws_vpc.vpc.id
+  subnet_id     = data.aws_subnet.subnet_01.id
 
   common_tags = {
     "AssetID"       = "2560"
