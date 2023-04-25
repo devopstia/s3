@@ -14,6 +14,14 @@ provider "aws" {
   region = local.aws_region
 }
 
+terraform {
+  backend "s3" {
+    bucket         = "2560-dev-alpha-s3-backend"
+    key            = "test-module/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "2560-dev-alpha-s3-dynamodb-table"
+  }
+}
 
 locals {
   aws_region    = "us-east-1"
@@ -44,45 +52,3 @@ module "bastion-host" {
 
   common_tags = local.common_tags
 }
-
-
-
-
-# # Create a Null Resource and Provisioners
-# resource "null_resource" "copy_ec2_keys" {
-#   depends_on = [module.bastion-host]
-#   connection {
-#     type        = "ssh"
-#     host        = module.bastion-host.public_ip
-#     user        = "ubuntu"
-#     password    = ""
-#     private_key = file("./private-key/terraform.pem")
-#   }
-
-#   provisioner "file" {
-#     source      = "./bastion-user-data/bastion-host-user-data.sh"
-#     destination = "/tmp/bastion-host-user-data.sh"
-#   }
-
-#   provisioner "file" {
-#     source      = "./private-key/terraform.pem"
-#     destination = "/tmp/terraform-key.pem"
-#   }
-
-#   provisioner "file" {
-#     source      = "./docker/Dockerfile"
-#     destination = "/tmp/Dockerfile"
-#   }
-
-#   # provisioner "remote-exec" {
-#   #   inline = [
-#   #     "sudo chmod 600 /tmp/terraform.pem",
-#   #     "sudo chmod +x /tmp/bastion-host-user-data.sh",
-#   #     "sudo bash /tmp/bastion-host-user-data.sh",
-#   #     "cd /tmp",
-#   #     "sudo docker build -t devopseasylearning2021/s5tia:microservice .",
-#   #     "sudo docker run -d -p 8090:80 --name microservice devopseasylearning2021/s5tia:microservice",
-#   #     "sudo docker ps -a",
-#   #   ]
-#   # }
-# }
