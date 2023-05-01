@@ -50,4 +50,4 @@ resource "aws_instance" "ec2-instance" {
     Name = "tia-web"
   }
 }
-*/.
+*/
