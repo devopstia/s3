@@ -55,40 +55,9 @@ resource "aws_iam_role_policy" "node-group-ClusterAutoscalerPolicy" {
   })
 }
 
-# This is for amanzon-ebs-csi-driver. 
-# PS: amanzon-ebs-csi-driver will not works if we do not have this policy
-resource "aws_iam_role_policy" "node_group_ebs_ebs_csi_driver" {
-  name = format("%s-%s-%s-blue-green-ebs-csi-driver-policy", var.common_tags["AssetID"], var.common_tags["Environment"], var.common_tags["Project"])
-  role = aws_iam_role.nodes.name
-
-  policy = jsonencode({
-    Version = "2012-10-17"
-    "Statement" : [
-      {
-        "Effect" : "Allow",
-        "Action" : [
-          "ec2:AttachVolume",
-          "ec2:CreateSnapshot",
-          "ec2:CreateTags",
-          "ec2:CreateVolume",
-          "ec2:DeleteSnapshot",
-          "ec2:DeleteTags",
-          "ec2:DeleteVolume",
-          "ec2:DescribeInstances",
-          "ec2:DescribeSnapshots",
-          "ec2:DescribeTags",
-          "ec2:DescribeVolumes",
-          "ec2:DetachVolume"
-        ],
-        "Resource" : "*"
-      }
-    ]
-  })
-}
-
-
 # This is for external dns. 
 # PS: aws cexternal dns will not works if we do not have this policy
+# https://repost.aws/knowledge-center/eks-set-up-externaldns
 resource "aws_iam_role_policy" "external_dns_policy" {
   name = format("%s-%s-%s-blue-green-external-dns-policy", var.common_tags["AssetID"], var.common_tags["Environment"], var.common_tags["Project"])
   role = aws_iam_role.nodes.name
