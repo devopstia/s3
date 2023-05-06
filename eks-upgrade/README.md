@@ -5,7 +5,7 @@
 2. [AWS upgrade reference](https://docs.aws.amazon.com/eks/latest/userguide/update-cluster.html )
 3. [EKS Kubernetes versions](https://docs.aws.amazon.com/eks/latest/userguide/kubernetes-versions.html)
 4. [kube-proxy add-on](https://docs.aws.amazon.com/eks/latest/userguide/managing-kube-proxy.html)
-5. [CoreDNS add-on][https://docs.aws.amazon.com/eks/latest/userguide/managing-coredns.html ]
+5. [CoreDNS add-on](https://docs.aws.amazon.com/eks/latest/userguide/managing-coredns.html)
 6. [VPC CNI add-on](https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html)
 
 ## EKS Upgrade Steps
@@ -33,15 +33,15 @@ We have 5 steps:
     ```
     - Output
     ```sh
-    602401143452.dkr.ecr.us-east-2.amazonaws.com/eks/kube-proxy:v1.19.6-eksbuild.2
+    602401143452.dkr.ecr.us-east-1.amazonaws.com/eks/kube-proxy:v1.19.6-eksbuild.2
     ```
     - Update , make sure to set the region correctly. This will change the kube-proxy image from 1.19 to 1.20
     ```sh
-    kubectl set image daemonset.apps/kube-proxy -n kube-system kube-proxy=602401143452.dkr.ecr.us-east-2.amazonaws.com/eks/kube-proxy:v1.20.4-eksbuild.2
+    kubectl set image daemonset.apps/kube-proxy -n kube-system kube-proxy=602401143452.dkr.ecr.us-east-1.amazonaws.com/eks/kube-proxy:v1.20.4-eksbuild.2
     ```
     - Verify if the kube-proxy pods are running in kube-system ns
     ```
-    k get po -n kube-system |grep kube-proxy
+    kubectl get po -n kube-system |grep kube-proxy
     ```
 
 ### Step 03: Patch CoreDNS
@@ -79,5 +79,99 @@ We have 5 steps:
     ```
     - Verify if the coredns pods are running in kube-system ns
     ```
-    k get po -n kube-system |grep coredns
+    kubectl get po -n kube-system |grep coredns
     ```
+
+## Step 04: Patch AWS CNI
+- [Check the image version for each Amazon EKS supported cluster version](https://docs.aws.amazon.com/eks/latest/userguide/managing-vpc-cni.html). [VPC CNI Github release version](https://github.com/aws/amazon-vpc-cni-k8s/tags)
+- Patch AWS CNI, make sure to match version listed in chart on the AWS upgrade doc , example below is from version 1.19 to version 1.20
+    - Verify (Check the AWS CNI version)
+    ```
+    kubectl describe daemonset aws-node --namespace kube-system | grep Image | cut -d "/" -f 2
+    ```
+    - Example output:
+    ```
+    amazon-k8s-cni-init:v1.11.0-eksbuild.1
+    amazon-k8s-cni:v1.11.0-eksbuild.1
+    ```
+    - Download the image with the your version
+    ```sh
+    curl -O https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/[YOU_VERSION]/config/master/aws-k8s-cni.yaml
+    curl -O curl -O https://raw.githubusercontent.com/aws/amazon-vpc-cni-k8s/v1.12.6/config/master/aws-k8s-cni.yaml
+    ```
+    - check the region 
+    ```
+    cat aws-k8s-cni.yaml |grep us-
+    ```
+    - Set Region
+    ```sh
+    sed -i.bak -e 's/us-west-2/[region-code]/' aws-k8s-cni.yaml
+    sed -i.bak -e 's/us-west-2/us-east-1/' aws-k8s-cni.yaml
+    ```
+    - Apply the yaml
+    ```sh
+    kubectl apply -f aws-k8s-cni.yaml
+    ```
+    - Check the version again
+    ```
+    kubectl describe daemonset aws-node --namespace kube-system | grep Image | cut -d "/" -f 2
+    ```
+    - Check pods
+    ```
+    kubectl get daemonset aws-node -n kube-system
+    ```
+
+## install jq
+1. Mac installation
+```
+brew install jq
+```
+
+2. Ubunt installation
+```sh
+sudo apt update
+sudo apt install -y jq
+```
+
+## Flip the nodes
+
+1. Check node with labels
+```sh
+kubectl get no -l deployment.nodegroup=blue
+kubectl get no -l deployment.nodegroup=green
+```
+3. Check if node are tainted
+```SH
+kubectl get nodes -o json | jq '.items[] | .metadata.name, .spec.taints'
+
+## OR
+for kube_node in $(kubectl get nodes | awk '{ print $1 }' | tail -n +2); do
+    echo ${kube_node} $(kubectl describe node ${kube_node} | grep Taint);
+done
+```
+
+2. Taint the current nodes in the cluster ====> [HERE](https://pet2cattle.com/2021/09/k8s-node-untaint)
+```sh
+## Taint (gpu can be anything)
+kubectl taint nodes [NODE_NAME]  gpu=true:NoSchedule
+kubectl taint nodes ip-192-168-62-62.ec2.internal gpu=true:NoSchedule
+
+## Untaint (gpu can be anything)
+kubectl taint nodes [NODE_NAME]  gpu=true:NoSchedule-
+kubectl taint nodes ip-192-168-92-254.ec2.internal gpu=true:NoSchedule-
+```
+
+3. Launch a new node group in cluster
+- In the node group, change the eks version to match the controle plane version
+- Apply the changes to create a new node group
+- Wait still the nodes join the cluster
+
+4. Drain the all nodes
+```sh
+kubectl drain [NODE_NAME] --ignore-daemonsets=false --force  --delete-local-data
+
+kubectl drain ip-192-168-92-254.ec2.internal --ignore-daemonsets=false --force  --delete-local-data
+kubectl drain ip-192-168-62-62.ec2.internal --ignore-daemonsets=false --force  --delete-local-data
+```
+
+5. Shutdown the old node group through terraform
