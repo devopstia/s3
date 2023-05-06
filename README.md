@@ -1,3 +1,2 @@
-# s3Blandine
+# S3
 
-s3 Blandine 2
