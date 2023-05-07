@@ -1,5 +1,5 @@
 autoDiscovery:
-  clusterName: eks
+  clusterName: 2560-dev-alpha
 
 awsRegion: us-east-1
 
@@ -37,5 +37,5 @@ updateStrategy:
     maxUnavailable: 0
   type: RollingUpdate
 
-# nodeSelector:
-#   deployment_nodegroup: blue_green
+nodeSelector:
+  deployment_nodegroup: blue_green
