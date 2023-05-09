@@ -49,3 +49,9 @@ helm upgrade articles --install ../../charts/applications --values articles.yaml
 
 kubectl label namespace articles istio-injection=enabled
 ```
+
+## articles
+```
+kubectl create ns microservices
+helm upgrade microservices --install ../../charts/applications --values microservices.yaml --namespace microservices
+```

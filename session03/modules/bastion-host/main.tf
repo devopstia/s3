@@ -21,41 +21,41 @@ resource "aws_eip" "bastion_eip" {
   )
 }
 
-# Create a Null Resource and Provisioners
-resource "null_resource" "copy_ec2_keys" {
-  depends_on = [aws_instance.bastion]
-  connection {
-    type        = "ssh"
-    host        = aws_eip.bastion_eip.public_ip
-    user        = "ubuntu"
-    password    = ""
-    private_key = file("./private-key/terraform.pem")
-  }
+# # Create a Null Resource and Provisioners
+# resource "null_resource" "copy_ec2_keys" {
+#   depends_on = [aws_instance.bastion]
+#   connection {
+#     type        = "ssh"
+#     host        = aws_eip.bastion_eip.public_ip
+#     user        = "ubuntu"
+#     password    = ""
+#     private_key = file("./private-key/terraform.pem")
+#   }
 
-  provisioner "file" {
-    source      = "./bastion-user-data/bastion-host-user-data.sh"
-    destination = "/tmp/bastion-host-user-data.sh"
-  }
+#   provisioner "file" {
+#     source      = "./bastion-user-data/bastion-host-user-data.sh"
+#     destination = "/tmp/bastion-host-user-data.sh"
+#   }
 
-  provisioner "file" {
-    source      = "./private-key/terraform.pem"
-    destination = "/tmp/terraform-key.pem"
-  }
+#   provisioner "file" {
+#     source      = "./private-key/terraform.pem"
+#     destination = "/tmp/terraform-key.pem"
+#   }
 
-  provisioner "file" {
-    source      = "./docker/Dockerfile"
-    destination = "/tmp/Dockerfile"
-  }
+#   provisioner "file" {
+#     source      = "./docker/Dockerfile"
+#     destination = "/tmp/Dockerfile"
+#   }
 
-  # provisioner "remote-exec" {
-  #   inline = [
-  #     "sudo chmod 600 /tmp/terraform.pem",
-  #     "sudo chmod +x /tmp/bastion-host-user-data.sh",
-  #     "sudo bash /tmp/bastion-host-user-data.sh",
-  #     "cd /tmp",
-  #     "sudo docker build -t devopseasylearning2021/s5tia:microservice .",
-  #     "sudo docker run -d -p 8090:80 --name microservice devopseasylearning2021/s5tia:microservice",
-  #     "sudo docker ps -a",
-  #   ]
-  # }
-}
+#   # provisioner "remote-exec" {
+#   #   inline = [
+#   #     "sudo chmod 600 /tmp/terraform.pem",
+#   #     "sudo chmod +x /tmp/bastion-host-user-data.sh",
+#   #     "sudo bash /tmp/bastion-host-user-data.sh",
+#   #     "cd /tmp",
+#   #     "sudo docker build -t devopseasylearning2021/s5tia:microservice .",
+#   #     "sudo docker run -d -p 8090:80 --name microservice devopseasylearning2021/s5tia:microservice",
+#   #     "sudo docker ps -a",
+#   #   ]
+#   # }
+# }
