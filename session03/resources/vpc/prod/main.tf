@@ -65,6 +65,3 @@ module "vpc-dev" {
   assign_generated_ipv6_cidr_block = local.assign_generated_ipv6_cidr_block
   cluster_name                     = local.cluster_name
 }
-
-
-

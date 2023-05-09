@@ -8,15 +8,15 @@ common_tags = {
   "cloudProvider" = "aws"
 }
 
-eks_version  = "1.22"
-node_min     = "1"
-desired_node = "1"
+eks_version  = "1.23"
+node_min     = "4"
+desired_node = "4"
 node_max     = "6"
 
 blue_node_color  = "blue"
 green_node_color = "green"
 
-blue  = true
+blue  = false
 green = true
 
 ec2_ssh_key               = "terraform"

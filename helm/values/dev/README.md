@@ -24,7 +24,7 @@ helm upgrade cluster-autoscaler --install ../../charts/cluster-autoscaler --valu
 ## external-dns
 ```
 kubectl create ns external-dns
-helm upgrade external-dns --install ../../charts/external-dns --values external-dns.yaml --namespace external-dns
+helm upgrade external-dns --install ../../../charts/external-dns --values external-dns.yaml --namespace external-dns
 ```
 
 ## metrics-server

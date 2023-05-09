@@ -175,3 +175,34 @@ kubectl drain ip-192-168-62-62.ec2.internal --ignore-daemonsets=false --force  -
 ```
 
 5. Shutdown the old node group through terraform
+
+
+## notes
+```sh
+v1.22.6-eksbuild.1
+v1.23.16-eksbuild.2
+
+kubectl set image daemonset.apps/kube-proxy -n kube-system kube-proxy=602401143452.dkr.ecr.us-east-1.amazonaws.com/eks/kube-proxy:v1.23.16-eksbuild.2
+
+v1.8.7-eksbuild.4
+kubectl set image --namespace kube-system deployment.apps/coredns \
+coredns=602401143452.dkr.ecr.us-east-1.amazonaws.com/eks/coredns:v1.8.7-eksbuild.4
+
+v1.10.1-eksbuild.1
+v1.12.6-eksbuild.1
+
+
+kubectl taint nodes [NODE_NAME]  gpu=true:NoSchedule
+kubectl taint nodes ip-192-168-62-62.ec2.internal gpu=true:NoSchedule
+
+kubectl taint nodes ip-10-0-1-139.ec2.internal gpu=true:NoSchedule
+kubectl taint nodes ip-10-0-1-64.ec2.internal gpu=true:NoSchedule
+kubectl taint nodes ip-10-0-2-41.ec2.internal gpu=true:NoSchedule
+kubectl taint nodes ip-10-0-2-55.ec2.internal gpu=true:NoSchedule
+
+
+kubectl drain ip-10-0-1-139.ec2.internal --ignore-daemonsets=true --force  --delete-local-data
+kubectl drain ip-10-0-1-64.ec2.internal  --ignore-daemonsets=true --force  --delete-local-data
+kubectl drain ip-10-0-2-41.ec2.internal  --ignore-daemonsets=true --force  --delete-local-data
+kubectl drain ip-10-0-2-55.ec2.internal  --ignore-daemonsets=true --force  --delete-local-data
+```
