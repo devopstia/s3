@@ -46,7 +46,7 @@ locals {
   enable_classiclink_dns_support   = false
   assign_generated_ipv6_cidr_block = false
 
-  cluster_name = "2526-dev-alpha"
+  cluster_name = "2560-dev-alpha"
 }
 
 module "vpc-dev" {

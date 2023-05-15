@@ -69,7 +69,7 @@ resource "aws_subnet" "public-subnet-01" {
   availability_zone       = var.aws_availability_zones[0]
   tags = merge(var.common_tags, {
     Name                                        = format("%s-%s-%s-vpc-public-subnet-01", var.common_tags["AssetID"], var.common_tags["Environment"], var.common_tags["Project"])
-    "kubernetes.io/role/internal-elb"           = "1"
+    "kubernetes.io/role/elb"                    = "1"
     "kubernetes.io/cluster/${var.cluster_name}" = var.shared
     },
   )
@@ -85,7 +85,7 @@ resource "aws_subnet" "public-subnet-02" {
   availability_zone       = var.aws_availability_zones[1]
   tags = merge(var.common_tags, {
     Name                                        = format("%s-%s-%s-vpc-public-subnet-02", var.common_tags["AssetID"], var.common_tags["Environment"], var.common_tags["Project"])
-    "kubernetes.io/role/internal-elb"           = "1"
+    "kubernetes.io/role/elb"                    = "1"
     "kubernetes.io/cluster/${var.cluster_name}" = var.shared
     },
   )
