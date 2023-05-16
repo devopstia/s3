@@ -4,7 +4,7 @@ metadata:
   name: static-deployment
   labels:
     app: static
-  namespace: app
+  namespace: tia
 spec:
   replicas: 1
   selector:
@@ -28,7 +28,7 @@ metadata:
   name: static-nodeport-service
   labels:
     app: static
-  namespace: app
+  namespace: tia
   annotations:
     alb.ingress.kubernetes.io/healthcheck-path: /index.html
 spec:

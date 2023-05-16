@@ -4,7 +4,7 @@ metadata:
   name: creative-deployment
   labels:
     app: creative
-  namespace: app
+  namespace: tia
 spec:
   replicas: 1
   selector:
@@ -28,7 +28,7 @@ metadata:
   name: creative-nodeport-service
   labels:
     app: creative
-  namespace: app
+  namespace: tia
   annotations:
     alb.ingress.kubernetes.io/healthcheck-path: /index.html
 spec:

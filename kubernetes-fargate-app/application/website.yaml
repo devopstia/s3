@@ -4,7 +4,7 @@ metadata:
   name: website-deployment
   labels:
     app: website
-  namespace: app
+  namespace: tia
 spec:
   replicas: 1
   selector:
@@ -27,7 +27,7 @@ metadata:
   name: website-nodeport-service
   labels:
     app: website
-    namespace: app
+    namespace: tia
     imagePullPolicy: Always
   annotations:
     alb.ingress.kubernetes.io/healthcheck-path: /index.html

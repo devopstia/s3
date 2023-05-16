@@ -1,6 +1,6 @@
 resource "aws_eks_fargate_profile" "app" {
   cluster_name           = format("%s-%s-%s", var.common_tags["AssetID"], var.common_tags["Environment"], var.common_tags["Project"])
-  fargate_profile_name   = "app"
+  fargate_profile_name   = "tia"
   pod_execution_role_arn = aws_iam_role.eks-fargate-profile.arn
 
   # These subnets must have the following resource tag: 
@@ -10,7 +10,7 @@ resource "aws_eks_fargate_profile" "app" {
     data.aws_subnet.private_subnet2.id
   ]
   selector {
-    namespace = "app"
+    namespace = "tia"
   }
 }
 

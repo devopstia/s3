@@ -10,6 +10,5 @@ name_spaces = [
   "argocd",
   "security",
   "jenkins",
-  "snorquble",
 ]
 

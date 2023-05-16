@@ -4,7 +4,7 @@ metadata:
   name: halloween-deployment
   labels:
     app: halloween
-  namespace: app
+  namespace: tia
 spec:
   replicas: 1
   selector:
@@ -28,7 +28,7 @@ metadata:
   name: halloween-nodeport-service
   labels:
     app: halloween
-  namespace: app
+  namespace: tia
   annotations:
     alb.ingress.kubernetes.io/healthcheck-path: /index.html
 spec:
