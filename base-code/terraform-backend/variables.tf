@@ -29,7 +29,7 @@ variable "versioning_enable" {
 variable "tags" {
   type = map(string)
   default = {
-    Owner       = "PECS"
+    Owner       = "alpha"
     Project     = "Apha"
     Environment = "dev"
     Create_By   = "Terraform"

@@ -7,7 +7,7 @@ bucket-name       = "ektec-terraform-student-state"
 versioning_enable = true
 
 tags = {
-  Owner       = "PECS"
+  Owner       = "alpha"
   Project     = "alpha"
   Environment = "development"
   Create_By   = "Terraform"
